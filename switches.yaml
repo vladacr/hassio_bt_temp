@@ -1,0 +1,5 @@
+
+- platform: remote_rpi_gpio
+  host: 192.168.1.143
+  ports:
+    21: 3D printer main board fan

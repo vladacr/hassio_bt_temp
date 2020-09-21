@@ -1,0 +1,53 @@
+- platform: octoprint
+  name: OctoPrint
+  monitored_conditions:
+    - Current State
+    - Job Percentage
+    - Time Elapsed
+    - Time Remaining
+    - Temperatures
+  value_template: '{{ value | multiply(0.166666666666666667) | round(1) }}'
+
+# - platform: command_line
+#   name: EnderPi CPU Temperature
+#   command: ssh pi@192.168.1.143 cat /sys/class/thermal/thermal_zone0/temp
+#   unit_of_measurement: "°C"
+#   value_template: '{{ value | multiply(0.001) | round(1) }}'
+
+# - platform: command_line
+#   name: GPU Temperature
+#   command: ssh pi@192.168.1.143 /opt/vc/bin/vcgencmd measure_temp
+#   unit_of_measurement: "°C"
+#   value_template: '{{ value | replace("temp=", "") | replace("''C", "") }}'
+
+- platform: time_date
+  display_options:
+    - 'time'
+    - 'date'
+
+- platform: scrape
+  resource: https://www.home-assistant.io
+  name: HA release
+  select: ".current-version h1"
+  value_template: '{{ value.split(":")[1] }}'
+
+- platform: scrape
+  resource: https://github.com/esphome/esphome/releases
+  name: ESPHome release
+  select: 'div[class="f1 flex-auto min-width-0 text-normal"]'
+  #value_template: '{{ value.split(":")[1] }}'
+
+- platform: mitemp_bt
+  decimals: 1
+  period: 30
+  # log_spikes: False
+  # use_median: False
+  active_scan: True
+  hci_interface: 0
+  batt_entities: True
+  encryptors:
+             'A4:C1:38:16:E3:24': '7adb133e57c54a0b44b76cbfdb372855'
+             'A4:C1:38:84:37:62': '97a50ab3d113fb12ff0e173b3c78ac14'
+             'A4:C1:38:7B:8D:45': '018f3ff93dc2b74dc86234fe2a490e1c'
+  report_unknown: True
+
